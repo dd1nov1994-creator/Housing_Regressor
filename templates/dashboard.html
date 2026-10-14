@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Housing Insights Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-icon">H</div>
+          <div>
+            <p class="eyebrow">Real estate intelligence</p>
+            <h1>Housing Predictor</h1>
+          </div>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          Live model analytics
+        </div>
+      </header>
+
+      <main class="dashboard-layout">
+        <aside class="prediction-sidebar">
+          <article class="panel prediction-panel">
+            <div class="panel-head">
+              <div>
+                <p class="small-label">Prediction console</p>
+                <h2>Property price forecast</h2>
+              </div>
+            </div>
+
+            <form id="predictionForm" class="prediction-form">
+              <div class="form-row">
+                <label for="modelSelect">Model</label>
+                <select id="modelSelect" name="model">
+                  {% for name in model_names %}
+                    <option value="{{ name }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="input-grid">
+                <div class="field">
+                  <label for="avgAreaIncome">Avg. Area Income</label>
+                  <input id="avgAreaIncome" name="Avg. Area Income" type="number" step="any" value="65000" required />
+                </div>
+                <div class="field">
+                  <label for="avgAreaHouseAge">Avg. Area House Age</label>
+                  <input id="avgAreaHouseAge" name="Avg. Area House Age" type="number" step="any" value="5.5" required />
+                </div>
+                <div class="field">
+                  <label for="avgAreaRooms">Avg. Area Number of Rooms</label>
+                  <input id="avgAreaRooms" name="Avg. Area Number of Rooms" type="number" step="any" value="6.0" required />
+                </div>
+                <div class="field">
+                  <label for="avgAreaBedrooms">Avg. Area Number of Bedrooms</label>
+                  <input id="avgAreaBedrooms" name="Avg. Area Number of Bedrooms" type="number" step="any" value="3.0" required />
+                </div>
+                <div class="field">
+                  <label for="areaPopulation">Area Population</label>
+                  <input id="areaPopulation" name="Area Population" type="number" step="any" value="12000" required />
+                </div>
+              </div>
+
+              <div class="button-row">
+                <button type="submit" class="primary-btn">Generate prediction</button>
+                <button type="button" class="secondary-btn" id="sampleDataBtn">Use sample data</button>
+              </div>
+            </form>
+
+            <div class="result-card" id="predictionResult">
+              <p class="result-label">Predicted value</p>
+              <h3 id="predictedPrice">$0.00</h3>
+              <span id="resultModelText">Selected model: LinearRegression</span>
+            </div>
+          </article>
+        </aside>
+
+        <div class="dashboard-content">
+          <section class="stats-grid" id="statsGrid">
+            <article class="stat-card accent">
+              <p>Best model</p>
+              <h3 id="bestModelName">—</h3>
+              <span id="bestModelScore">R² 0.00</span>
+            </article>
+            <article class="stat-card">
+              <p>Avg. MAE</p>
+              <h3 id="avgMae">—</h3>
+              <span>Mean absolute error</span>
+            </article>
+            <article class="stat-card">
+              <p>Avg. RMSE</p>
+              <h3 id="avgRmse">—</h3>
+              <span>Root mean squared error</span>
+            </article>
+            <article class="stat-card">
+              <p>Models</p>
+              <h3 id="modelCount">0</h3>
+              <span>Tested regressors</span>
+            </article>
+          </section>
+
+          <section class="chart-grid">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="small-label">Model ranking</p>
+                  <h2>R² performance</h2>
+                </div>
+              </div>
+              <div class="chart-wrap"><canvas id="r2Chart"></canvas></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div>
+                  <p class="small-label">Error comparison</p>
+                  <h2>RMSE by model</h2>
+                </div>
+              </div>
+              <div class="chart-wrap"><canvas id="rmseChart"></canvas></div>
+            </article>
+          </section>
+
+          <article class="panel benchmark-panel">
+            <div class="panel-head">
+              <div>
+                <p class="small-label">Performance matrix</p>
+                <h2>Model benchmark</h2>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>MAE</th>
+                    <th>RMSE</th>
+                    <th>R²</th>
+                  </tr>
+                </thead>
+                <tbody id="benchmarkBody"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </main>
+    </div>
+
+    <script type="application/json" id="resultsData">{{ results | tojson | safe }}</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </body>
+</html>

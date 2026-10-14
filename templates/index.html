@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Housing Price Predictor</title>
+</head>
+<body>
+  <h1>Housing Price Predictor</h1>
+  <form method="post" action="/predict">
+    <label>Model:
+      <select name="model">
+        {% for name in model_names %}
+          <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+      </select>
+    </label><br><br>
+    <label>Avg. Area Income: <input type="number" step="any" name="Avg. Area Income" required></label><br>
+    <label>Avg. Area House Age: <input type="number" step="any" name="Avg. Area House Age" required></label><br>
+    <label>Avg. Area Number of Rooms: <input type="number" step="any" name="Avg. Area Number of Rooms" required></label><br>
+    <label>Avg. Area Number of Bedrooms: <input type="number" step="any" name="Avg. Area Number of Bedrooms" required></label><br>
+    <label>Area Population: <input type="number" step="any" name="Area Population" required></label><br><br>
+    <button type="submit">Predict</button>
+  </form>
+</body>
+</html>
